@@ -1,6 +1,8 @@
 ThreadPool with Camera Preview
 -------------------------------
 
+Download the demo app on [Google Play](https://play.google.com/store/apps/details?id=au.com.alphamu.camerapreviewcaptureimage).
+
 This project demonstrate how to use `HandlerThread`s and `ThreadPool`s to burst capture 
 images from Android's Camera API on a background thread.
 The images are then:
