@@ -26,3 +26,4 @@ Performance After ThreadPool
 
 Demo App on Google Play
 ======================
+Download the demo app on [Google Play](https://play.google.com/store/apps/details?id=au.com.alphamu.camerapreviewcaptureimage).
