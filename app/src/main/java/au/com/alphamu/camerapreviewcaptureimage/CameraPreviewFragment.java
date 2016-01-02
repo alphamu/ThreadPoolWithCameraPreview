@@ -16,6 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -32,6 +33,7 @@ public class CameraPreviewFragment extends Fragment {
     private RecyclerView mRecycler;
     private ImageButton mButtonClick;
     private TextView mCounterView;
+    private CheckBox mCheckBox;
 
     private CameraThumbnailImageAdapter mAdapter;
     private CounterAsyncTask mCounterTask;
@@ -47,6 +49,10 @@ public class CameraPreviewFragment extends Fragment {
         // Required empty public constructor
     }
 
+    public static CameraPreviewFragment newInstance() {
+        return new CameraPreviewFragment();
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -59,6 +65,7 @@ public class CameraPreviewFragment extends Fragment {
         mRecycler = (RecyclerView) v.findViewById(R.id.images);
         mButtonClick = (ImageButton) v.findViewById(R.id.button_click);
         mCounterView = (TextView) v.findViewById(R.id.count);
+        mCheckBox = (CheckBox) v.findViewById(R.id.checkbox_threads);
 
         LinearLayoutManager layoutManager
                 = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
@@ -234,6 +241,10 @@ public class CameraPreviewFragment extends Fragment {
             return true;
         result |= "google_sdk".equals(Build.PRODUCT);
         return result;
+    }
+
+    public boolean getUseThreadPool() {
+        return mCheckBox.isChecked();
     }
 
     private static class CounterAsyncTask extends AsyncTask<Integer, Integer, Void> {

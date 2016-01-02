@@ -26,7 +26,7 @@
     <RelativeLayout
         android:id="@+id/button_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="64dp"
         android:layout_marginBottom="8dp"
         android:layout_above="@+id/images">
 
@@ -34,9 +34,22 @@
             android:id="@+id/button_click"
             android:layout_width="64dp"
             android:layout_height="64dp"
-            android:layout_centerInParent="true"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
             android:background="@drawable/camera_click_button"
             android:src="@drawable/ic_action_camera" />
+
+        <CheckBox
+            android:id="@+id/checkbox_threads"
+            android:background="@android:color/white"
+            android:padding="4dp"
+            android:layout_marginLeft="8dp"
+            android:layout_alignParentBottom="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:textSize="12sp"
+            android:text="Use ThreadPool"/>
     </RelativeLayout>
 
     <TextView
@@ -44,7 +57,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@android:color/white"
-        android:textSize="20dp"
+        android:textSize="24dp"
         android:gravity="center"
         android:text="00:00"/>
 

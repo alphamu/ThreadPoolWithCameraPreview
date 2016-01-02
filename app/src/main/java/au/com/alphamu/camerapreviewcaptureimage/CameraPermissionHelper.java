@@ -58,7 +58,7 @@ public class CameraPermissionHelper extends Fragment {
     public void checkCameraPermissions() {
         if (ContextCompat.checkSelfPermission(getActivity(),
                 Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-
+            mCallback.onCameraPermissionResult(true);
         } else {
             if (!sPermissionDenied) {
                 requestPermissions(

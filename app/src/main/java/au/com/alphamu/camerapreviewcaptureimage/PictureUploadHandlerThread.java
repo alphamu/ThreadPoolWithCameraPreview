@@ -6,10 +6,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.hardware.Camera;
-import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 
@@ -44,8 +42,8 @@ public class PictureUploadHandlerThread extends HandlerThread {
     private Set<File> mQueue = new HashSet<>();
     private Map<File, Bitmap> mWritePictureRequest = new HashMap<>();
 
-    private Long counter = 1l;
-    private boolean useThreads = true;
+    private Long mCounter = 1l;
+    private boolean mUseThreads = true;
 
 
     PictureUploadHandlerThread(CameraPreviewFragment cameraPreviewFragment) {
@@ -62,8 +60,12 @@ public class PictureUploadHandlerThread extends HandlerThread {
 
             @Override
             public boolean handleMessage(Message msg) {
+                CameraPreviewFragment f = mCameraPreviewRef.get();
+                if (f != null) {
+                    mUseThreads = f.getUseThreadPool();
+                }
                 if (msg.what == WHAT_UPLOAD) {
-                    if (!useThreads) {
+                    if (!mUseThreads) {
                         File file = (File) msg.obj;
                         mQueue.remove(file);
                         Log.i(TAG, String.format("Processing %s", file.getName()));
@@ -87,12 +89,12 @@ public class PictureUploadHandlerThread extends HandlerThread {
                         }.init((File) msg.obj));
                     }
                 } else if (msg.what == WHAT_WRITE_TO_DISK) {
-                    if (!useThreads) {
-                        File f = (File) msg.obj;
-                        Bitmap bmp = mWritePictureRequest.get(f);
-                        writeToFile(f, bmp, true);
-                        mWritePictureRequest.remove(f);
-                        queueFileToUpload(f);
+                    if (!mUseThreads) {
+                        File file = (File) msg.obj;
+                        Bitmap bmp = mWritePictureRequest.get(file);
+                        writeToFile(file, bmp, true);
+                        mWritePictureRequest.remove(file);
+                        queueFileToUpload(file);
                     } else {
                         BitmapThreadPool.post(new Runnable() {
                             File data;
@@ -117,7 +119,7 @@ public class PictureUploadHandlerThread extends HandlerThread {
                 } else if (msg.what == WHAT_CREATE_BITMAP) {
                     makeBitmap((MakeBitmapData) msg.obj);
                 } else if (msg.what == WHAT_CREATE_BITMAP_FROM_PREVIEW) {
-                    if (!useThreads) {
+                    if (!mUseThreads) {
                         makePreviewBitmap((MakeBitmapData) msg.obj);
                     } else {
                         BitmapThreadPool.post(new Runnable() {
@@ -266,8 +268,8 @@ public class PictureUploadHandlerThread extends HandlerThread {
             }
 
             //Size for display
-            String fileName = "bitmap-" + counter + "-" + FILE_NAME.format(new Date()) + ".jpg";
-            counter += 1;
+            String fileName = "bitmap-" + mCounter + "-" + FILE_NAME.format(new Date()) + ".jpg";
+            mCounter += 1;
             reqWidth = res.getDimensionPixelSize(R.dimen.camera_thumbnail_height); //this is actually the height, since we display in portrait
             reqHeight = res.getDimensionPixelSize(R.dimen.camera_thumbnail_width);
             options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
@@ -316,9 +318,9 @@ public class PictureUploadHandlerThread extends HandlerThread {
 
             //Size for display
             String fileName;
-            synchronized (counter) {
-                fileName = "bitmap-" + counter + "-" + FILE_NAME.format(new Date()) + ".jpg";
-                counter += 1;
+            synchronized (mCounter) {
+                fileName = "bitmap-" + mCounter + "-" + FILE_NAME.format(new Date()) + ".jpg";
+                mCounter += 1;
             }
             reqWidth = res.getDimensionPixelSize(R.dimen.camera_thumbnail_height); //this is actually the height, since we display in portrait
             reqHeight = res.getDimensionPixelSize(R.dimen.camera_thumbnail_width);
