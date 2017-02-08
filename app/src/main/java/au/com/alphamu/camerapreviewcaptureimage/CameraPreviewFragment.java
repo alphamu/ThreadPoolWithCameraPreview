@@ -2,8 +2,10 @@ package au.com.alphamu.camerapreviewcaptureimage;
 
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.hardware.Camera;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -188,6 +190,10 @@ public class CameraPreviewFragment extends Fragment {
                 mPreview.switchCamera(mCamera);
                 // Start the preview
                 mCamera.startPreview();
+                return true;
+            case R.id.terms:
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://cdn.rawgit.com/alphamu/ThreadPoolWithCameraPreview/master/privacypolicy.html"));
+                startActivity(browserIntent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
